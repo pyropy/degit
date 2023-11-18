@@ -5,14 +5,34 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import { exec, execSync } from "child_process";
-import { Config } from "./core/config";
-import { Web3 } from "web3";
+import {
+  RepositoryConfig,
+  loadAccountConfig,
+  loadRepositoryConfig,
+} from "./core/config";
+import { ethers } from "ethers";
 
-const web3 = new Web3(process.env.WEB3_PROVIDER_URL);
+const provider = new ethers.JsonRpcProvider(process.env.WEB3_PROVIDER_URL);
 const program = new Command();
 const logo = figlet.textSync("deGit");
 
-program.name("deGit").version("1.0.0").description(logo);
+// loadEth loads ethereum contract and account
+const loadEth = () => {
+  // Replace with your contract address and ABI
+  const repoConfig = loadRepositoryConfig();
+  const accountConfig = loadAccountConfig();
+  const wallet = new ethers.Wallet(accountConfig.private, provider);
+  // Create a new contract instance
+  const contract = new ethers.Contract(
+    repoConfig.address,
+    repoConfig.abi,
+    wallet
+  );
+
+  return { contract, wallet };
+};
+
+program.name("degit").version("1.0.0").description(logo);
 
 program
   .command("setup")
@@ -21,7 +41,7 @@ program
     // Setup directory in home directory
     const homeDir = os.homedir();
     const deGitDir = path.join(homeDir, ".degit");
-    const account = web3.eth.accounts.create();
+    const account = ethers.Wallet.createRandom();
     const keys = {
       public: account.address,
       private: account.privateKey,
@@ -46,7 +66,7 @@ program
     "address of the repository semaphore contract",
     ","
   )
-  .action((relativePath: string, config: Config) => {
+  .action((relativePath: string, config: RepositoryConfig) => {
     const serializedConfig = JSON.stringify(config);
     const absPath = path.resolve(relativePath);
     const deGitDir = `${absPath}/.degit`;
@@ -101,37 +121,34 @@ program
   .argument("<branch>")
   .description("Push changes to a branch")
   .action((branch: string) => {
-    exec(`git push ipld:: ${branch}`, (error, stdout, stderr) => {
+    exec(`git push ipld:: ${branch}`, async (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
         return;
       }
-
+      const { contract } = loadEth();
       const output = stderr.trim();
       const cidRegex = /ipld:\/\/(\w+)/;
       const match = output.match(cidRegex);
+      if (match) {
+        const cid = match[1];
 
-      exec(
-        "git rev-parse --abbrev-ref HEAD",
-        (branchError, branchStdout, branchStderr) => {
-          if (branchError) {
-            console.error(`exec error: ${branchError}`);
-            return;
-          }
-
-          const currentBranch = branchStdout.trim();
-
-          if (match) {
-            const cid = match[1];
-            console.log(`CID: ${cid}`);
-          } else {
-            console.log("No CID found in the output");
-          }
-
-          console.log("Current branch: ", currentBranch);
-        }
-      );
+        await contract.setCID(branch, cid);
+      } else {
+        console.log("No CID found in the output");
+      }
     });
+  });
+
+program
+  .command("checkout")
+  .argument("<branch>")
+  .description("Checks out newest HEAD from the dgit repository")
+  .action(async (branch: string) => {
+    const { contract } = loadEth();
+    const cid = await contract.getCID(branch);
+
+    console.log(cid);
   });
 
 program.parse(process.argv);
