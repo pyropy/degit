@@ -4,6 +4,7 @@
 2. Install local IPFS node and run `ipfs init` and afterwards `ipfs daemon`
 3. Install pre-requisits by running `make pre-requisits`
 4. On macOS you'd have to copy `git-remote-ipld` over to git plugins directory
+5. Install bacalhau `https://docs.bacalhau.org/getting-started/installation`
 
 ## Setup
 

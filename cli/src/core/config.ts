@@ -12,18 +12,8 @@ export type AccountConfig = {
   web3PrivateKey: string; // private key
 };
 
-export type LilypadConfig = {
-  web3ChainId: string;
+export type RpcConfig = {
   web3RpcUrl: string;
-  web3ControllerAddress: string;
-  web3TokenAddress: string;
-  web3MediationAddress: string;
-  web3JobCreatorAddress: string;
-  web3PaymentsAddress: string;
-  web3StorageAddress: string;
-  web3UsersAddress: string;
-  serviceSolver: string;
-  serviceMediators: string;
 };
 
 // loadConfig tries to load config from the current working directory
@@ -39,7 +29,7 @@ export const loadRepositoryConfig = () => {
 };
 
 // loadGlobalConfig tries to load account config from the degit config directory
-export const loadGlobalConfig = (): AccountConfig & LilypadConfig => {
+export const loadGlobalConfig = (): AccountConfig & RpcConfig => {
   const homePath = os.homedir();
   const configPath = path.join(homePath, ".degit/config.json");
   const config = fs.readFileSync(configPath, "utf8");

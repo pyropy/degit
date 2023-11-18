@@ -1,11 +1,11 @@
 import { ethers } from "ethers";
 import {
-  LilypadConfig,
+  RpcConfig,
   loadGlobalConfig,
   loadRepositoryConfig,
 } from "./config";
 
-export const newProvider = (config: Pick<LilypadConfig, "web3RpcUrl">) => {
+export const newProvider = (config: Pick<RpcConfig, "web3RpcUrl">) => {
   return new ethers.JsonRpcProvider(config.web3RpcUrl);
 };
 

@@ -32,19 +32,8 @@ program
     };
 
     // hardcode lilypad config for now
-    const lilypadConfig = {
-      web3ChainId: "11155111",
-      web3ProviderUrl: options.rpc,
+    const rpcConfig = {
       web3RpcUrl: options.rpc,
-      web3ControllerAddress: "0x433C91FA54b9c11550b07672E1FA2b06860e5b05",
-      web3TokenAddress: "0x90bC5e91B2bC6BBa240001B169fd73DeA75E072A",
-      web3MediationAddress: "0xe294485d0C03adCe1BE2c2791522A6c0585A4f7B",
-      web3JobCreatorAddress: "0x4aC3C9F7e431dce628440b5037d23890c28E5C3F",
-      web3PaymentsAddress: "0xC5b1737A2282E6283c54f67bC401426058BC170F",
-      web3StorageAddress: "0x79Ee2d28eDDd9Ee0b68613b29Dab474623F8D1c6",
-      web3UsersAddress: "0x70eC3b0aFA059174dD54d7702624f1Dd402b706b",
-      serviceSolver: "0x08D118d3300c82CD94a4080805426AB025fe9852",
-      serviceMediators: "0xd6244f8c08d4b7bb7ccbd72e585b19ee68a8d1eb",
     };
 
     if (!fs.existsSync(deGitDir)) {
@@ -53,7 +42,7 @@ program
       fs.mkdirSync(hooksDir);
       fs.writeFileSync(
         path.join(deGitDir, "config.json"),
-        JSON.stringify({ ...keys, ...lilypadConfig })
+        JSON.stringify({ ...keys, ...rpcConfig })
       );
       fs.writeFileSync(
         path.join(hooksDir, "commit-msg"),
