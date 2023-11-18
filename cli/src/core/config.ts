@@ -14,7 +14,6 @@ export type AccountConfig = {
 
 export type LilypadConfig = {
   web3ChainId: string;
-  web3ProviderUrl: string;
   web3RpcUrl: string;
   web3ControllerAddress: string;
   web3TokenAddress: string;
