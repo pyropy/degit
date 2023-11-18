@@ -15,7 +15,8 @@
   "dependencies": {
     "commander": "^11.1.0",
     "ethers": "^6.8.1",
-    "figlet": "^1.7.0"
+    "figlet": "^1.7.0",
+    "web3": "^4.2.2"
   },
   "devDependencies": {
     "@types/figlet": "^1.5.8",
