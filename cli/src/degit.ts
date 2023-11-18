@@ -8,6 +8,7 @@ import { exec, execSync } from "child_process";
 import { RepositoryConfig } from "./core/config";
 import { ethers } from "ethers";
 import { loadEth } from "./core/web3";
+import { COMMIT_MSG_HOOK } from "./core/hooks";
 
 const program = new Command();
 const logo = figlet.textSync("deGit");
@@ -22,6 +23,8 @@ program
     // Setup directory in home directory
     const homeDir = os.homedir();
     const deGitDir = path.join(homeDir, ".degit");
+    const templateDir = path.join(homeDir, ".degit/template");
+    const hooksDir = path.join(homeDir, ".degit/template/hooks");
     const account = ethers.Wallet.createRandom();
     const keys = {
       web3PublicKey: account.address,
@@ -46,9 +49,15 @@ program
 
     if (!fs.existsSync(deGitDir)) {
       fs.mkdirSync(deGitDir);
+      fs.mkdirSync(templateDir);
+      fs.mkdirSync(hooksDir);
       fs.writeFileSync(
         path.join(deGitDir, "config.json"),
         JSON.stringify({ ...keys, ...lilypadConfig })
+      );
+      fs.writeFileSync(
+        path.join(hooksDir, "commit-msg"),
+        COMMIT_MSG_HOOK.trim()
       );
       console.log(`Created deGit directory at ${deGitDir}`);
     } else {
@@ -67,13 +76,15 @@ program
     ","
   )
   .action((relativePath: string, config: RepositoryConfig) => {
+    const homeDir = os.homedir();
+    const templateDir = path.join(homeDir, ".degit/template");
     const serializedConfig = JSON.stringify(config);
     const absPath = path.resolve(relativePath);
     const deGitDir = `${absPath}/.degit`;
     fs.mkdirSync(deGitDir);
     console.log("init", absPath);
     // Create a new git repository
-    execSync(`git init ${absPath}`);
+    execSync(`git init ${absPath} --template=${templateDir}`);
     fs.writeFileSync(path.join(deGitDir, "config.json"), serializedConfig);
   });
 
