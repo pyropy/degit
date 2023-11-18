@@ -1,7 +1,13 @@
+## Pre-requisits
+
+1. Install golang
+2. Install local IPFS node and run `ipfs init` and afterwards `ipfs daemon`
+3. Install pre-requisits by running `make pre-requisits`
+4. On macOS you'd have to copy `git-remote-ipld` over to git plugins directory
+
 ## Setup
 
 1. `make install`
-
 
 ## Commands
 
