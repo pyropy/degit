@@ -1,4 +1,5 @@
 #!/usr/bin/env ts-node --esm
+
 import { Command } from "commander";
 import figlet from "figlet";
 import path from "path";

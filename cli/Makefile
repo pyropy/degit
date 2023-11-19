@@ -1,4 +1,4 @@
-pre-requisits:
+prerequisites:
 	@go install github.com/ipfs-shipyard/git-remote-ipld/cmd/git-remote-ipld@latest
 
 install:
