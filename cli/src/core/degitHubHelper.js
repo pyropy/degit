@@ -24,6 +24,11 @@ class DegitHubHelper {
         return fullProof;
     }
 
+    async getRepoGroupId (repoName) {
+        const repoGroupId = await this.degitHubContract.methods.repositories(repoName).call();
+        return repoGroupId.groupId;
+    }
+
     async addRepository(fromAddress, repoName, groupId, merkleTreeRoot, merkleTreeDepth) {
         const gasEstimate = await this.degitHubContract.methods.addRepository(repoName, groupId, merkleTreeRoot, merkleTreeDepth).estimateGas({ from: fromAddress });
         return this.degitHubContract.methods.addRepository(repoName, groupId, merkleTreeRoot, merkleTreeDepth)
