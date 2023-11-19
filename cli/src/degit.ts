@@ -79,19 +79,22 @@ program
 program
   .command("init")
   .argument("<path>")
+  .argument("<name>")
   .description("Initialize a new repository")
   .option("-n, --name <string>", "name of the repository", ",")
-  .option(
-    "-a, --address <string>",
-    "address of the repository semaphore contract",
-    ","
-  )
-  .action((relativePath: string, config: RepositoryConfig) => {
+  .action(async (relativePath: string, name: string, config: RepositoryConfig) => {
+    const onchainGroupId = await getDegitHubHelperInstance().getRepoGroupId(name);
+    if (onchainGroupId != 0) {
+      throw Error("Repository with given name already exists");
+    }
     const homeDir = os.homedir();
     const templateDir = path.join(homeDir, ".degit/template");
     const serializedConfig = JSON.stringify(config);
     const absPath = path.resolve(relativePath);
     const deGitDir = `${absPath}/.degit`;
+    if (fs.existsSync(deGitDir)) {
+      throw Error("degit repository already initialized")
+    }
     fs.mkdirSync(deGitDir);
     console.log("init", absPath);
     // Create a new git repository
