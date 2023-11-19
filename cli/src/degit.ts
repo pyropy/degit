@@ -156,4 +156,20 @@ program
     console.log(cid);
   });
 
+program
+  .command("id")
+  .description("Returns the semaphore identity commitment, to be used for inviting to semaphore groups")
+  .action(() => {
+    const homeDir = os.homedir();
+    const deGitDir = path.join(homeDir, ".degit");
+    const configPath = path.join(deGitDir, "config.json");
+    if (fs.existsSync(configPath)) {
+        const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+        console.log(config.semaphoreIdentityCommitment);
+    } else {
+      throw new Error("Configuration file not found.");
+    }
+  });
+
+
 program.parse(process.argv);
