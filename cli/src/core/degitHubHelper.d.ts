@@ -6,4 +6,5 @@ export default class DegitHubHelper {
     getBranchHead(repoName: string, branchName: string): Promise<string>;
     
     static generateSemaphoreIdentity(): { identity: string; commitment: string };
+    static getChainGroups(): { groups: any }
 }

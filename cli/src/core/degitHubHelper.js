@@ -2,6 +2,7 @@ import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
 import { Identity } from "@semaphore-protocol/identity";
 import DegitHubAbi from '../DegitHubAbi.json' assert { type: 'json' };
+import { ApiSdk } from '@bandada/api-sdk';
 
 class DegitHubHelper {
     constructor(identityStr, providerUrl, contractAddress) {
@@ -34,6 +35,24 @@ class DegitHubHelper {
 
     async getBranchHead(repoName, branchName) {
         return this.degitHubContract.methods.getBranchHead(repoName, branchName).call();
+    }
+
+    static async getChainGroups() {
+        const bandada = new ApiSdk();
+        const groups = await bandada.getGroups();
+        return groups;
+    }
+
+    static async getChainGroup(groupId) {
+        const bandada = new ApiSdk();
+        const group = await bandada.getGroup(groupId);
+        return group;
+    }
+
+    static async getChainIsMember(groupId, memberId) {
+        const bandada = new ApiSdk();
+        const isGroupMember = await bandada.isGroupMember(groupId, memberId);
+        return isGroupMember;
     }
 }
 

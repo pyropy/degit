@@ -171,5 +171,12 @@ program
     }
   });
 
+program
+  .command("groups")
+  .description("Returs the on-chain semaphore groups")
+  .action(async () => {
+    const groups = await DegitHubHelper.getChainGroups();
+    console.log(groups);
+  })
 
 program.parse(process.argv);
