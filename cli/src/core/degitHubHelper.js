@@ -4,8 +4,8 @@ import { Identity } from "@semaphore-protocol/identity";
 import DegitHubAbi from '../DegitHubAbi.json' assert { type: 'json' };
 
 class DegitHubHelper {
-    constructor(identity, providerUrl, contractAddress) {
-        this.identity = new Identity(identity);
+    constructor(identityStr, providerUrl, contractAddress) {
+        this.identity = new Identity(identityStr);
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
         this.degitHubContract = new Contract(DegitHubAbi, contractAddress, { from: this.web3.eth.defaultAccount });
     }
@@ -13,6 +13,11 @@ class DegitHubHelper {
     static generateSemaphoreIdentity() {
         const identity = new Identity();
         return { identity: identity.toString(), commitment: identity.commitment.toString() };
+    }
+
+    async generateProof (group, externalNullifier, signal) {
+        const fullProof = generateProof(new Identity(this.identity), group, externalNullifier, signal);
+        return fullProof;
     }
 
     async addRepository(fromAddress, repoName, groupId, merkleTreeRoot, merkleTreeDepth) {
