@@ -10,6 +10,7 @@ import { RepositoryConfig } from "./core/config";
 import { ethers } from "ethers";
 import { loadEth } from "./core/web3";
 import { COMMIT_MSG_HOOK } from "./core/hooks";
+import DegitHubHelper from "./core/degitHubHelper";
 
 const program = new Command();
 const logo = figlet.textSync("deGit");
@@ -18,7 +19,7 @@ program.name("degit").version("1.0.0").description(logo);
 
 program
   .command("setup")
-  .description("Setup deGit on your machine")
+  .description("Setup degit on your machine")
   .option("-r, --rpc <string>", "url to the rpc provider")
   .action((options) => {
     // Setup directory in home directory
@@ -27,9 +28,12 @@ program
     const templateDir = path.join(homeDir, ".degit/template");
     const hooksDir = path.join(homeDir, ".degit/template/hooks");
     const account = ethers.Wallet.createRandom();
+    const identity = DegitHubHelper.generateSemaphoreIdentity();
     const keys = {
       web3PublicKey: account.address,
       web3PrivateKey: account.privateKey,
+      semaphoreIdentity: identity.identity,
+      semaphoreIdentityCommitment: identity.commitment
     };
 
     // hardcode lilypad config for now
@@ -144,7 +148,7 @@ program
 program
   .command("checkout")
   .argument("<branch>")
-  .description("Checks out newest HEAD from the dgit repository")
+  .description("Checks out newest HEAD from the degit repository")
   .action(async (branch: string) => {
     const { contract } = loadEth();
     const cid = await contract.getCID(branch);

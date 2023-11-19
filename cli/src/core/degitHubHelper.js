@@ -1,12 +1,18 @@
-const Web3 = require('web3');
-const { Contract } = require('web3-eth-contract');
-
-const DegitHubABI = require('../DegitHubAbi.json');
+import Web3 from 'web3';
+import { Contract } from 'web3-eth-contract';
+import { Identity } from "@semaphore-protocol/identity";
+import DegitHubAbi from '../DegitHubAbi.json' assert { type: 'json' };
 
 class DegitHubHelper {
-    constructor(providerUrl, contractAddress) {
+    constructor(identity, providerUrl, contractAddress) {
+        this.identity = new Identity(identity);
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
-        this.degitHubContract = new Contract(DegitHubABI, contractAddress, { from: this.web3.eth.defaultAccount });
+        this.degitHubContract = new Contract(DegitHubAbi, contractAddress, { from: this.web3.eth.defaultAccount });
+    }
+
+    static generateSemaphoreIdentity() {
+        const identity = new Identity();
+        return { identity: identity.toString(), commitment: identity.commitment.toString() };
     }
 
     async addRepository(fromAddress, repoName, groupId, merkleTreeRoot, merkleTreeDepth) {
@@ -26,4 +32,4 @@ class DegitHubHelper {
     }
 }
 
-module.exports = DegitHubHelper;
+export default DegitHubHelper;

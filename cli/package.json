@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/degit.ts",
   "scripts": {
-    "start": "ts-node --esm src/degit.ts",
+    "start": "NODE_NO_WARNINGS=1 ts-node --esm src/degit.ts",
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +13,7 @@
   "type": "module",
   "license": "ISC",
   "dependencies": {
+    "@semaphore-protocol/identity": "^3.15.0",
     "commander": "^11.1.0",
     "ethers": "^6.8.1",
     "figlet": "^1.7.0",
