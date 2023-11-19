@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import { Contract } from 'web3-eth-contract';
 import { Identity } from "@semaphore-protocol/identity";
 import DegitHubAbi from '../DegitHubAbi.json' assert { type: 'json' };
 import { ApiSdk } from '@bandada/api-sdk';
@@ -12,7 +11,7 @@ class DegitHubHelper {
     constructor(identityStr, providerUrl, contractAddress) {
         this.identity = new Identity(identityStr);
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
-        this.degitHubContract = new Contract(DegitHubAbi, contractAddress, { from: this.web3.eth.defaultAccount });
+        this.degitHubContract = new this.web3.eth.Contract(DegitHubAbi, contractAddress);
     }
 
     static generateSemaphoreIdentity() {

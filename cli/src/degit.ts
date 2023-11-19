@@ -19,6 +19,19 @@ const chain = "goerli";
 const providerUrl = "https://rpc.goerli.eth.gateway.fm";
 const contractAddress = "0xf613cC447386Edca54a82bDB04386eb7031E703a";
 
+let degitHubHelperInstance: DegitHubHelper | null = null;
+
+function getDegitHubHelperInstance(): DegitHubHelper {
+    if (!degitHubHelperInstance) {
+      const homeDir = os.homedir();
+      const configPath = path.join(homeDir, ".degit/config.json");
+      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      const identityStr = config.semaphoreIdentity;
+      degitHubHelperInstance = new DegitHubHelper(identityStr, providerUrl, contractAddress);
+    }
+    return degitHubHelperInstance;
+}
+
 program.name("degit").version("1.0.0").description(logo);
 
 program
