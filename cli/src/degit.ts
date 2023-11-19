@@ -27,7 +27,7 @@ function getDegitHubHelperInstance(): DegitHubHelper {
       const configPath = path.join(homeDir, ".degit/config.json");
       const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
       const identityStr = config.semaphoreIdentity;
-      degitHubHelperInstance = new DegitHubHelper(identityStr, providerUrl, contractAddress);
+      degitHubHelperInstance = new DegitHubHelper(identityStr, providerUrl, contractAddress, config.web3PrivateKey);
     }
     return degitHubHelperInstance;
 }

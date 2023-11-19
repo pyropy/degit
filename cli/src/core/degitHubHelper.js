@@ -8,9 +8,12 @@ const chain = "goerli";
 
 class DegitHubHelper {
 
-    constructor(identityStr, providerUrl, contractAddress) {
+    constructor(identityStr, providerUrl, contractAddress, privKey) {
         this.identity = new Identity(identityStr);
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
+        this.account = this.web3.eth.accounts.privateKeyToAccount(privKey);
+        this.web3.eth.accounts.wallet.add(this.account);
+        this.web3.eth.defaultAccount = this.account.address;
         this.degitHubContract = new this.web3.eth.Contract(DegitHubAbi, contractAddress);
     }
 
@@ -29,16 +32,16 @@ class DegitHubHelper {
         return repoGroupId.groupId;
     }
 
-    async addRepository(fromAddress, repoName, groupId, merkleTreeRoot, merkleTreeDepth) {
-        const gasEstimate = await this.degitHubContract.methods.addRepository(repoName, groupId, merkleTreeRoot, merkleTreeDepth).estimateGas({ from: fromAddress });
+    async addRepository(repoName, groupId, merkleTreeRoot, merkleTreeDepth) {
+        const gasEstimate = await this.degitHubContract.methods.addRepository(repoName, groupId, merkleTreeRoot, merkleTreeDepth).estimateGas();
         return this.degitHubContract.methods.addRepository(repoName, groupId, merkleTreeRoot, merkleTreeDepth)
-            .send({ from: fromAddress, gas: gasEstimate });
+            .send({ gas: gasEstimate });
     }
 
-    async updateBranchHead(fromAddress, repoName, branchName, newHeadCommitHash, signal, nullifierHash, externalNullifier, proof) {
-        const gasEstimate = await this.degitHubContract.methods.updateBranchHead(repoName, branchName, newHeadCommitHash, signal, nullifierHash, externalNullifier, proof).estimateGas({ from: fromAddress });
+    async updateBranchHead(repoName, branchName, newHeadCommitHash, signal, nullifierHash, externalNullifier, proof) {
+        const gasEstimate = await this.degitHubContract.methods.updateBranchHead(repoName, branchName, newHeadCommitHash, signal, nullifierHash, externalNullifier, proof).estimateGas();
         return this.degitHubContract.methods.updateBranchHead(repoName, branchName, newHeadCommitHash, signal, nullifierHash, externalNullifier, proof)
-            .send({ from: fromAddress, gas: gasEstimate });
+            .send({ gas: gasEstimate });
     }
 
     async getBranchHead(repoName, branchName) {
