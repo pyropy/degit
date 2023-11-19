@@ -15,6 +15,10 @@ import DegitHubHelper from "./core/degitHubHelper";
 const program = new Command();
 const logo = figlet.textSync("deGit");
 
+const chain = "goerli";
+const providerUrl = "https://rpc.goerli.eth.gateway.fm";
+const contractAddress = "0xf613cC447386Edca54a82bDB04386eb7031E703a";
+
 program.name("degit").version("1.0.0").description(logo);
 
 program

@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@bandada/contracts/protocols/IBandadaSemaphore.sol";
 
 contract DegitHub {
-    IBandadaSemaphore public bandadaSemaphore;
+    IBandadaSemaphore public bandadaSemaphore; // goerli 0xB6f17dB678Dab765bC684Fd6BaA0F222Af388F77
 
     // Structure for representing a branch in a repository
     struct Branch {
