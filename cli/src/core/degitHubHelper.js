@@ -3,8 +3,12 @@ import { Contract } from 'web3-eth-contract';
 import { Identity } from "@semaphore-protocol/identity";
 import DegitHubAbi from '../DegitHubAbi.json' assert { type: 'json' };
 import { ApiSdk } from '@bandada/api-sdk';
+import { SemaphoreEthers } from "@semaphore-protocol/data";
+
+const chain = "goerli";
 
 class DegitHubHelper {
+
     constructor(identityStr, providerUrl, contractAddress) {
         this.identity = new Identity(identityStr);
         this.web3 = new Web3(new Web3.providers.HttpProvider(providerUrl));
@@ -43,16 +47,39 @@ class DegitHubHelper {
         return groups;
     }
 
-    static async getChainGroup(groupId) {
+    static async getOffchainGroup(groupId) {
         const bandada = new ApiSdk();
         const group = await bandada.getGroup(groupId);
         return group;
     }
 
-    static async getChainIsMember(groupId, memberId) {
+    static async getOffhainIsMember(groupId, memberId) {
         const bandada = new ApiSdk();
         const isGroupMember = await bandada.isGroupMember(groupId, memberId);
         return isGroupMember;
+    }
+
+    static async getChainGroups() {
+        const semaphoreEthers = new SemaphoreEthers(chain);
+        const groupIds = await semaphoreEthers.getGroupIds();
+        return groupIds;
+    }
+
+    static async getChainGroup(groupId) {
+        const semaphoreEthers = new SemaphoreEthers(chain);
+        const groupIds = await semaphoreEthers.getGroup(groupId);
+        return groupIds;
+    }
+
+    static async getChainGroupMembers(groupId) {
+        const semaphoreEthers = new SemaphoreEthers(chain);
+        const members = await semaphoreEthers.getGroupMembers(groupId);
+        return members;
+    }
+
+    static async getChainIsMember(groupId, memberId) {
+        const members = await this.getChainGroupMembers(groupId);
+        return members.includes(memberId);
     }
 }
 

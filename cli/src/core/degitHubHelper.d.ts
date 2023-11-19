@@ -7,4 +7,7 @@ export default class DegitHubHelper {
     
     static generateSemaphoreIdentity(): { identity: string; commitment: string };
     static getChainGroups(): { groups: any }
+    static getChainGroup(groupId: string): { group: any }
+    static getChainGroupMembers(groupId: string): { members: any }
+    static getChainIsMember(groupId: string, memberId: string): { isMember: boolean }
 }

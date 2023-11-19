@@ -179,4 +179,32 @@ program
     console.log(groups);
   })
 
+program
+  .command("group")
+  .argument("<groupId>")
+  .description("Returs the on-chain semaphore group with given id")
+  .action(async (groupId: string) => {
+    const group = await DegitHubHelper.getChainGroup(groupId);
+    console.log(group);
+  })
+
+program
+  .command("members")
+  .argument("<groupId>")
+  .description("Returs the members of the on-chain semaphore group with given id")
+  .action(async (groupId: string) => {
+    const members = await DegitHubHelper.getChainGroupMembers(groupId);
+    console.log(members);
+  })
+
+program
+  .command("ismember")
+  .argument("<groupId>")
+  .argument("<semaphoreId>")
+  .description("Returns true if semaphore Id is member of the on-chain group with given id")
+  .action(async (groupId: string, semaphoreId: string) => {
+    const isMember = await DegitHubHelper.getChainIsMember(groupId, semaphoreId);
+    console.log(isMember.toString());
+  })
+
 program.parse(process.argv);
